@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { uuid } from 'uuidv4'
+
+import {Routes, Route, Link} from 'react-router-dom'
+import AddContact from './AddContact';
+import Contact from './Contact';
+import ContactList from './ContactList';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const[contacts, setContacts] =useState([{id:1,name:'raj',email:'raj@gmail'},{id:2,name:'gowtham',email:'gowtham@gmail.com'}])
+
+  const handleDelete = (id) => {
+      let newContact = contacts.filter(c => c.id !== id)
+    setContacts(newContact)
+  }
+
+  const handleAdd = ({name,email}) => {
+    const newContact = { id: uuid(), name, email }
+    let newContacts=[...contacts,newContact]
+    setContacts(newContacts)
+
+  }
+
+  return <div>
+    <h2>Contact Manager</h2> 
+    <Routes>
+      <Route path='/' element={<ContactList contacts={contacts} handleDelete={handleDelete} />} />
+      <Route path='add' element={<AddContact handleAdd={handleAdd} />} />
+      <Route path='contact/:id' element={<Contact contacts={contacts} />} />
+   
+      
+    </Routes>
+  </div>;
 }
 
 export default App;
